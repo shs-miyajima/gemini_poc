@@ -20,6 +20,7 @@ description: >-
 ### フェーズ 1: 仕様整理
 
 - [ ] `01-requirements.md` を作成・更新
+- [ ] `effort-report.md` の「§1 人手想定工数」にフェーズ別見積を記入（根拠つき）
 - [ ] 不明点を `open-questions.md` に記載し、ユーザーに質問
 - [ ] Laravel / フロント（Blade / Vite / JS）の責務分界を記載
 - [ ] 確定後、ユーザー承認を得て `01-requirements.status` を `approved` に
@@ -42,7 +43,12 @@ description: >-
 
 - [ ] `02-design.status` が `approved` であることを確認
 - [ ] `03-test-plan.md` にテスト方針・カテゴリ別件数を記載
-- [ ] `03-test-plan.csv` にケース一覧（正常系・異常系・境界値・権限・派生パターン）
+- [ ] テスト種別ごとに CSV を分けてケース一覧を記載:
+  - Playwright E2E: `03-test-plan.csv`
+  - PHPUnit: `03-test-plan-phpunit.csv`（Service 等の単体テストがある場合）
+  - Vitest: `03-test-plan-vitest.csv`（JavaScript 単体テストがある場合）
+- [ ] 異なるテスト種別のケースを同じ CSV に混在させない
+- [ ] 各 CSV は 1 行 1 観点で、正常系・異常系・境界値・権限・派生パターンを網羅する
 - [ ] 承認後 `03-test-plan.status` を `approved` に
 
 **停止**: 承認までコード編集・テスト実行に進まない
@@ -56,6 +62,7 @@ description: >-
 - [ ] Vitest（JS 単体、該当時）
 - [ ] Playwright E2E（`tests/e2e_tests/`）
 - [ ] 失敗時は原因分析 → 修正（最大 3 回）→ エスカレーション
+- [ ] 完了時に `effort-report.md` の「§2 実績記録」「§3 削減効果」を確定し、完了報告に含める
 
 ## 承認の受け方
 
@@ -64,6 +71,7 @@ description: >-
 - 「OK」など対象フェーズが曖昧な場合は、どのフェーズへの承認かを確認してから更新する
 - 承認時: `*.status` を更新（1 行目 `approved`、`date:`・`phase:` を記録）+ `changelog.md` に 1 エントリ
 - 差戻し時: `*.status` を `rejected` に + `changelog.md` に理由を記録
+- 承認・完了のたびに `effort-report.md` の「§2 実績記録」へ該当フェーズの実績（着手・承認時刻、経過時間、差戻し回数）を記入する
 
 ## 参照
 
