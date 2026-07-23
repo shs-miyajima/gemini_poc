@@ -3,7 +3,7 @@
  * sdd-lint-testid.mjs — テスト計画 CSV とテストコードの Test ID 突合
  *
  * Usage: node scripts/sdd-lint-testid.mjs <slug>
- *        npm run lint:sdd:testid -- 001_create_management
+ *        npm run lint:sdd:testid -- csv-import
  *
  * 検証内容:
  *   1. CSV の E2E Test ID が Playwright spec（.spec.ts）に存在するか（未実装検出 → ERROR）
@@ -19,15 +19,15 @@
  * Exit code: 1 (ERROR あり) / 0 (問題なし)
  */
 
-import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
-// Test ID のパターン: <Prefix>-<category>-<nnn>
-const TEST_ID_RE = /\b(E2E|PHPUnit|Vitest)-[a-zA-Z]+-\d+\b/g;
+// Test ID のパターン: <Prefix>-<nnn>-<category>（例: E2E-001-trn / PU-001-auth / VT-001-dyn）
+const TEST_ID_RE = /\b(E2E|PU|VT)-\d+-[a-zA-Z]+\b/g;
 
 // ----- ファイル探索 -----
 
@@ -114,7 +114,7 @@ function main() {
   const slug = process.argv[2];
   if (!slug) {
     console.error('Usage: node scripts/sdd-lint-testid.mjs <slug>');
-    console.error('       npm run lint:sdd:testid -- 001_create_management');
+    console.error('       npm run lint:sdd:testid -- csv-import');
     process.exit(1);
   }
 
@@ -152,8 +152,8 @@ function main() {
   // --- 突合チェック ---
   const checks = [
     { label: 'E2E（Playwright）',  csvIds: csvE2E,     codeIds: codeE2E,     prefix: 'E2E' },
-    { label: 'PHPUnit',            csvIds: csvPHPUnit,  codeIds: codePHPUnit, prefix: 'PHPUnit' },
-    { label: 'Vitest',             csvIds: csvVitest,   codeIds: codeVitest,  prefix: 'Vitest' },
+    { label: 'PHPUnit',            csvIds: csvPHPUnit,  codeIds: codePHPUnit, prefix: 'PU' },
+    { label: 'Vitest',             csvIds: csvVitest,   codeIds: codeVitest,  prefix: 'VT' },
   ];
 
   for (const { label, csvIds, codeIds, prefix } of checks) {
